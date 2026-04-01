@@ -1,8 +1,8 @@
 "use client"; 
 
 import { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import InvoiceCard from "./components/invoiceCard";
+import Sidebar from "./components/Sidebar"; 
+import InvoiceCard from "./components/InvoiceCard";
 
 export default function HomePage() {
   const [selectedRegion, setSelectedRegion] = useState("Semua Wilayah");
@@ -13,7 +13,11 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar onSelectRegionAction={handleSelectRegion} />
+      {/* Tambahkan prop selectedRegion di sini agar Sidebar tahu mana yang aktif */}
+      <Sidebar 
+        onSelectRegion={handleSelectRegion} 
+        selectedRegion={selectedRegion} 
+      />
 
       <main className="flex-1 p-8">
         <div className="max-w-5xl mx-auto space-y-6">

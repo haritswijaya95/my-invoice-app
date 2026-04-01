@@ -1,11 +1,11 @@
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+// vite.config.ts
+import path from 'path';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom', // Agar bisa simulasi browser (DOM)
-    globals: true,        // Agar bisa pakai 'expect' tanpa import di tiap file
-    setupFiles: './vitest.setup.js',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './'), // Sesuaikan jika foldernya ./src
+    },
   },
-})
+});

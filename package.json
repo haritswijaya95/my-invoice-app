@@ -10,10 +10,13 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
     "next": "15.1.0",
+    "postcss": "^8.5.8",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",

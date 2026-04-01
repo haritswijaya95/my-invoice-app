@@ -1,31 +1,31 @@
-import Link from "next/link";
+"use client";
 
+import React from 'react';
+
+// INI BAGIAN PENTING: Mendefinisikan apa saja yang boleh dikirim ke Sidebar
 interface SidebarProps {
-  // Buat menjadi opsional dengan tanda "?" agar layout.tsx tidak error
-  onSelectRegionAction?: (name: string) => void;
+  onSelectRegion: (name: string) => void; // Fungsi untuk mengubah wilayah
+  selectedRegion: string;                // String wilayah yang sedang aktif
 }
 
-// Contoh data region (sesuaikan dengan data kamu)
-const regions = [
-  { id: "jakarta", name: "Jakarta" },
-  { id: "jawa-barat", name: "Jawa Barat" },
-  { id: "jawa-tengah", name: "Jawa Tengah" },
-];
+export default function Sidebar({ onSelectRegion, selectedRegion }: SidebarProps) {
+  const regions = ["Semua Wilayah", "Jakarta", "Bandung", "Surabaya"];
 
-export default function Sidebar({ onSelectRegionAction }: SidebarProps) {
   return (
-    <aside className="w-64 bg-white border-r min-h-screen p-4">
-      <h2 className="text-xl font-bold mb-6">Regions</h2>
+    <aside className="w-64 bg-white border-r border-slate-200 min-h-screen p-4">
       <nav className="space-y-2">
         {regions.map((region) => (
-          <Link
-            key={region.id}
-            href={`/region/${region.id}`} // Path tujuan navigasi
-            onClick={() => onSelectRegionAction?.(region.name)} // Jalankan jika ada fungsinya
-            className="block p-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors border"
+          <button
+            key={region}
+            onClick={() => onSelectRegion(region)} // Memanggil fungsi saat diklik
+            className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+              selectedRegion === region
+                ? "bg-indigo-600 text-white"
+                : "text-slate-600 hover:bg-slate-100"
+            }`}
           >
-            {region.name}
-          </Link>
+            {region}
+          </button>
         ))}
       </nav>
     </aside>

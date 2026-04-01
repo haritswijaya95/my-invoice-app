@@ -1,13 +1,19 @@
-type Params = {
-  params: {
-    slug: string;
-  };
-};
+// app/blog/[slug]/page.tsx
 
-export async function generateMetadata({ params }: Params) {
-  return { title: `Post: ${params.slug}` };
+// 1. Definisikan tipe params sebagai Promise
+interface PageProps {
+  params: Promise<{ slug: string }>;
 }
 
-export default function Page({ params }: Params) {
-  return <h1>Slug: {params.slug}</h1>;
+// 2. Tambahkan 'async' pada fungsi komponen
+export default async function PostPage({ params }: PageProps) {
+  // 3. Await params sebelum digunakan
+  const { slug } = await params;
+
+  return (
+    <div className="p-8">
+      <h1>Blog Post: {slug}</h1>
+      {/* Isi konten blog kamu */}
+    </div>
+  );
 }

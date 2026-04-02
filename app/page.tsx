@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Sidebar from "./components/Sidebar"; 
 import InvoiceCard from "./components/InvoiceCard";
+import '@/styles/globals.css'; // Sesuaikan path-nya, bisa jadi '../globals.css'
 
 export default function HomePage() {
   const [selectedRegion, setSelectedRegion] = useState("Semua Wilayah");

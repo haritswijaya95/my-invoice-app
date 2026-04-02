@@ -1,16 +1,22 @@
 "use client";
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 interface InvoiceCardProps {
   regionName: string;
 }
 
 export default function InvoiceCard({ regionName }: InvoiceCardProps) {
-  // Data dummy diletakkan di dalam komponen
+  // 1. Buat state untuk tanggal agar tidak bentrok antara server & client
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    // Tanggal hanya di-set setelah komponen "mount" di browser
+    setCurrentDate(new Date().toLocaleDateString('id-ID'));
+  }, []);
+
   const invoiceData = useMemo(() => ({
     number: "INV0001",
-    date: new Date().toLocaleDateString('id-ID'), // Tanggal dinamis
     customer: { name: "Luna", email: "luna@example.com" },
     items: [
       { id: 1, name: "Pena Hitam", price: 10000, quantity: 1 },
@@ -18,12 +24,10 @@ export default function InvoiceCard({ regionName }: InvoiceCardProps) {
     ],
   }), []);
 
-  // Hitung total secara dinamis
   const totalAmount = invoiceData.items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
-  const handlePrint = () => {
-    window.print();
-  };
+  // ... fungsi handlePrint dan handleSave tetap sama ...
+  const handlePrint = () => { window.print(); };
 
   const handleSave = async () => {
     try {
@@ -36,29 +40,24 @@ export default function InvoiceCard({ regionName }: InvoiceCardProps) {
           items: invoiceData.items 
         }),
       });
-      
-      if (response.ok) {
-        alert("Berhasil disimpan ke database!");
-      } else {
-        alert("Gagal menyimpan ke server.");
-      }
+      if (response.ok) alert("Berhasil disimpan!");
+      else alert("Gagal menyimpan.");
     } catch (error) {
-      console.error("Gagal menyimpan:", error);
       alert("Terjadi kesalahan koneksi.");
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-4">
-      {/* Area yang akan dicetak */}
-      <div id="print-area" className="bg-white p-8 rounded-2xl shadow-xl border border-slate-200 print:shadow-none print:border-none print:p-0">
+      <div id="print-area" className="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h2 className="text-3xl font-black text-indigo-600 mb-1">INVOICE</h2>
             <p className="text-sm text-slate-400">#{invoiceData.number}</p>
           </div>
           <div className="text-right text-sm text-slate-500">
-            <p>Tanggal: {invoiceData.date}</p>
+            {/* Tampilkan tanggal hanya jika sudah ada nilainya */}
+            <p>Tanggal: {currentDate || "Loading..."}</p>
           </div>
         </div>
 
@@ -74,24 +73,27 @@ export default function InvoiceCard({ regionName }: InvoiceCardProps) {
           </div>
         </div>
 
-        <table className="w-full mb-6">
-          <thead>
-            <tr className="text-left text-xs text-slate-400 border-b">
-              <th className="pb-2 text-left">ITEM</th>
-              <th className="pb-2 text-center">QTY</th>
-              <th className="pb-2 text-right">HARGA</th>
-            </tr>
-          </thead>
-          <tbody className="text-sm">
-            {invoiceData.items.map(item => (
-              <tr key={item.id} className="border-b border-slate-50">
-                <td className="py-3 font-medium text-slate-700">{item.name}</td>
-                <td className="py-3 text-center text-slate-600">{item.quantity}</td>
-                <td className="py-3 text-right text-slate-600">Rp {item.price.toLocaleString('id-ID')}</td>
+        {/* Gunakan tabel dengan lebar penuh */}
+        <div className="overflow-x-auto">
+          <table className="w-full mb-6">
+            <thead>
+              <tr className="text-left text-xs text-slate-400 border-b">
+                <th className="pb-2">ITEM</th>
+                <th className="pb-2 text-center">QTY</th>
+                <th className="pb-2 text-right">HARGA</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-sm">
+              {invoiceData.items.map(item => (
+                <tr key={item.id} className="border-b border-slate-50">
+                  <td className="py-3 font-medium text-slate-700">{item.name}</td>
+                  <td className="py-3 text-center text-slate-600">{item.quantity}</td>
+                  <td className="py-3 text-right text-slate-600">Rp {item.price.toLocaleString('id-ID')}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <div className="flex justify-end">
           <div className="text-right">
@@ -101,31 +103,14 @@ export default function InvoiceCard({ regionName }: InvoiceCardProps) {
         </div>
       </div>
 
-      {/* Tombol Kontrol (Hidden saat print menggunakan utility Tailwind) */}
       <div className="flex gap-3 print:hidden">
-        <button 
-          onClick={handlePrint}
-          className="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-slate-900 transition-all flex justify-center items-center gap-2"
-        >
-          <span>🖨️</span> Cetak Invoice
+        <button onClick={handlePrint} className="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-slate-900 transition-all">
+          🖨️ Cetak Invoice
         </button>
-        <button 
-          onClick={handleSave}
-          className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all"
-        >
+        <button onClick={handleSave} className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all">
           💾 Simpan Data
         </button>
       </div>
-
-      {/* Style Global untuk Print */}
-      <style jsx global>{`
-        @media print {
-          body { background: white !important; }
-          /* Sembunyikan semua elemen kecuali area print */
-          body > :not(.max-w-2xl) { display: none; } 
-          .print\:hidden { display: none !important; }
-        }
-      `}</style>
     </div>
   );
 }

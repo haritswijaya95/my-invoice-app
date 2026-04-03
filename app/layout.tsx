@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-// PILIH SALAH SATU SAJA yang benar-benar berisi @import "tailwindcss";
-import "./global.css"; 
+import "@/app/globals.css";
 
+// Konfigurasi Inter yang paling simpel
 const inter = Inter({ 
   subsets: ["latin"],
-  display: 'swap', // Tambahkan ini untuk menghilangkan warning "preload" tadi
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -20,6 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      {/* Jika Google Font gagal, dia akan otomatis pakai font sistem (sans-serif) */}
       <body className={inter.className}>
         {children}
       </body>

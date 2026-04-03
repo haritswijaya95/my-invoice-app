@@ -20,10 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* Jika Google Font gagal, dia akan otomatis pakai font sistem (sans-serif) */}
-      <body className={inter.className}>
+      {/* Pastikan tidak ada typo di class name global jika ada */}
+      <body className="antialiased"> 
         {children}
       </body>
     </html>
   );
 }
+  
+      

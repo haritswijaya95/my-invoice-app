@@ -75,7 +75,7 @@ export default function InvoiceCard({ regionName }: InvoiceCardProps) {
 
         {/* Gunakan tabel dengan lebar penuh */}
         <div className="overflow-x-auto">
-          <table className="w-full mb-6">
+          <table className="w-full mb-6 min-w-[600px">
             <thead>
               <tr className="text-left text-xs text-slate-400 border-b">
                 <th className="pb-2">ITEM</th>
